@@ -12,6 +12,7 @@ fn main() -> std::io::Result<()> {
   let mut emulator = Machine::new();
   let mut window: PistonWindow =
     WindowSettings::new("Space Invaders", [224. * SCALE, 256. * SCALE])
+      .resizable(false)
       .exit_on_esc(true)
       //.graphics_api(OpenGL::V4_5)
       .graphics_api(OpenGL::V3_2)
