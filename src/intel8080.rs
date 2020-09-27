@@ -30,6 +30,13 @@ struct ConditionCodes {
   ac: bool,
 }
 
+#[derive(Copy, Clone)]
+pub enum Interrupts {
+  Disabled,
+  PreEnabled,
+  Enabled,
+}
+
 pub struct Intel8080 {
   //TODO: See if there is a way to expose these without making them public
   pub a: u8,
