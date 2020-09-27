@@ -50,7 +50,7 @@ pub struct Intel8080 {
   pub pc: u16,
   pub memory: [u8; 0x10000],
   cc: ConditionCodes,
-  pub interrupts_enabled: bool,
+  pub interrupts: Interrupts,
   halted: bool,
 }
 
@@ -74,7 +74,7 @@ impl Intel8080 {
         cy: false,
         ac: false,
       },
-      interrupts_enabled: false,
+      interrupts: Interrupts::Disabled,
       halted: false,
     }
   }
@@ -233,7 +233,7 @@ impl Intel8080 {
   pub fn generate_interrupt(&mut self, number: u8) {
     self.push((self.pc >> 8) as u8, (self.pc & 0x00FF) as u8);
     self.pc = 8 * number as u16;
-    self.interrupts_enabled = false;
+    self.interrupts = Interrupts::Disabled;
   }
 
   #[cfg(feature = "cputest")]
@@ -265,6 +265,12 @@ impl Intel8080 {
     if self.halted {
       return 0;
     }
+
+    // If interrupts were set to be enabled last time, fully enable them this time around so they will be available after this instruction executes
+    self.interrupts = match self.interrupts {
+      Interrupts::PreEnabled => Interrupts::Enabled,
+      other => other,
+    };
 
     #[cfg(feature = "printops")]
     self.disassemble_8080_op(self.pc as usize);
@@ -1399,7 +1405,8 @@ impl Intel8080 {
         10
       }
       0xf3 => { // DI
-        self.interrupts_enabled = false;
+        // Interrupts are disabled immediately following execution of the DI instruction
+        self.interrupts = Interrupts::Disabled;
         4
       }
       0xf4 => { // CP adr
@@ -1466,7 +1473,8 @@ impl Intel8080 {
         10
       }
       0xfb => { // EI
-        self.interrupts_enabled = true;
+        // Interrupts are enabled following execution of the *next* instruction
+        self.interrupts = Interrupts::PreEnabled;
         4
       }
       0xfc => { // CM adr

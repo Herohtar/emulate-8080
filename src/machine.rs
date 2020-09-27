@@ -1,7 +1,7 @@
 use std::{fs::File, io::Cursor, io::Read, time::Duration, time::Instant};
 use rodio::{Device, Sink, Source};
 
-use crate::intel8080::Intel8080;
+use crate::intel8080::{Intel8080, Interrupts};
 
 const CYCLE_TIME: Duration = Duration::from_nanos(480);
 const INTERRUPT_INTERVAL: Duration = Duration::from_micros(8333);
@@ -142,8 +142,8 @@ impl Machine {
 
   pub fn execute(&mut self) {
     #[cfg(not(feature = "cputest"))]
-    if self.cpu.interrupts_enabled {
-      match self.last_interrupt_time {
+    match self.cpu.interrupts {
+      Interrupts::Enabled => match self.last_interrupt_time {
         Some(time) if time.elapsed() > INTERRUPT_INTERVAL => {
           self.cpu.generate_interrupt(self.next_interrupt);
           self.next_interrupt = match self.next_interrupt {
@@ -155,6 +155,7 @@ impl Machine {
         Some(_) => (),
         None => self.last_interrupt_time = Some(Instant::now()),
       }
+      _ => (),
     }
 
     if let Some(time) = self.last_execution_time {
