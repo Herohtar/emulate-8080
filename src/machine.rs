@@ -159,7 +159,7 @@ impl Machine {
     }
 
     if let Some(time) = self.last_execution_time {
-      let cycles_needed = time.elapsed().as_nanos() / CYCLE_TIME.as_nanos();
+      let cycles_needed = (time.elapsed().as_secs_f64() / CYCLE_TIME.as_secs_f64()).ceil() as u32;
       let mut cycles = 0;
       while cycles < cycles_needed {
         #[cfg(feature = "cputest")]
@@ -180,7 +180,7 @@ impl Machine {
             self.cpu.pc += 2;
             cycles += 10;
           }
-          _ => cycles += self.cpu.execute_next_instruction() as u128
+          _ => cycles += self.cpu.execute_next_instruction() as u32
         }
         self.last_execution_time = Some(Instant::now());
       }
