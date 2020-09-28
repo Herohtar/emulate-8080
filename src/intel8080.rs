@@ -46,7 +46,7 @@ pub struct Intel8080 {
   e: u8,
   h: u8,
   l: u8,
-  pub sp: u16,
+  sp: u16,
   pub pc: u16,
   pub memory: [u8; 0x10000],
   cc: ConditionCodes,
