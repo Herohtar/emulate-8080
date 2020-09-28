@@ -31,7 +31,7 @@ struct ConditionCodes {
 }
 
 #[derive(Copy, Clone)]
-pub enum Interrupts {
+enum Interrupts {
   Disabled,
   PreEnabled,
   Enabled,
@@ -50,7 +50,7 @@ pub struct Intel8080 {
   pub pc: u16,
   pub memory: [u8; 0x10000],
   cc: ConditionCodes,
-  pub interrupts: Interrupts,
+  interrupts: Interrupts,
   halted: bool,
   has_output: bool,
   output_port: u8,
@@ -235,9 +235,14 @@ impl Intel8080 {
   }
 
   pub fn generate_interrupt(&mut self, number: u8) {
-    self.push((self.pc >> 8) as u8, (self.pc & 0x00FF) as u8);
-    self.pc = 8 * number as u16;
-    self.interrupts = Interrupts::Disabled;
+    match self.interrupts {
+      Interrupts::Enabled => {
+        self.push((self.pc >> 8) as u8, (self.pc & 0x00FF) as u8);
+        self.pc = 8 * number as u16;
+        self.interrupts = Interrupts::Disabled;
+      },
+      _ => (),
+    }
   }
 
   #[cfg(feature = "cputest")]
