@@ -189,14 +189,10 @@ impl Machine {
   fn play_sounds(&mut self) {
     if self.out_port3 != self.last_out_port3 {
       if self.out_port3 & 0x1 == 0x1 && !(self.last_out_port3 & 0x1 == 0x1) {
-        if self.ufo_sink.is_paused() {
-          self.ufo_sink.play();
-        }
+        self.ufo_sink.play();
       }
       if self.out_port3 & 0x1 == 0x0 && !(self.last_out_port3 & 0x1 == 0x0) {
-        if !self.ufo_sink.is_paused() {
-          self.ufo_sink.pause();
-        }
+        self.ufo_sink.pause();
       }
       if self.out_port3 & 0x2 == 0x2 && !(self.last_out_port3 & 0x2 == 0x2) {
         let sound = rodio::Decoder::new(Cursor::new(SHOOT)).unwrap();
