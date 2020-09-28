@@ -14,7 +14,7 @@ const BEAT4: &[u8] = include_bytes!("../sounds/fastinvader4.wav");
 const EXPLOSION: &[u8] = include_bytes!("../sounds/explosion.wav");
 const INVADER_KILLED: &[u8] = include_bytes!("../sounds/invaderkilled.wav");
 const UFO_HIGH_PITCH: &[u8] = include_bytes!("../sounds/ufo_highpitch.wav");
-const UFO_LOW_PITCH: &[u8] = include_bytes!("../sounds/ufo_lowpitch2.wav");
+const UFO_LOW_PITCH: &[u8] = include_bytes!("../sounds/ufo_lowpitch.wav");
 
 pub enum PlayerKey {
   Coin,
@@ -53,7 +53,7 @@ impl Machine {
     let device = rodio::default_output_device().unwrap();
     let sink = Sink::new(&device);
     sink.pause();
-    let sound = rodio::Decoder::new(Cursor::new(UFO_LOW_PITCH)).unwrap();
+    let sound = rodio::Decoder::new(Cursor::new(UFO_HIGH_PITCH)).unwrap();
     sink.append(sound.repeat_infinite());
 
     Machine {
@@ -229,7 +229,7 @@ impl Machine {
         rodio::play_raw(&self.sound_device, sound.convert_samples());
       }
       if self.out_port5 & 0x10 == 0x10 && !(self.last_out_port5 & 0x10 == 0x10) {
-        let sound = rodio::Decoder::new(Cursor::new(UFO_HIGH_PITCH)).unwrap();
+        let sound = rodio::Decoder::new(Cursor::new(UFO_LOW_PITCH)).unwrap();
         rodio::play_raw(&self.sound_device, sound.convert_samples());
       }
     }
