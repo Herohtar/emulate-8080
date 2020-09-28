@@ -169,12 +169,6 @@ impl Machine {
 
         let opcode = self.cpu.memory[self.cpu.pc as usize];
         match opcode {
-          0xd3 => { // OUT D8
-            self.space_invaders_out(self.cpu.memory[self.cpu.pc as usize + 1], self.cpu.a);
-            self.cpu.pc += 2;
-            cycles += 10;
-            self.play_sounds();
-          }
           0xdb => { // IN D8
             self.cpu.a = self.space_invaders_in(self.cpu.memory[self.cpu.pc as usize + 1]);
             self.cpu.pc += 2;
@@ -182,6 +176,12 @@ impl Machine {
           }
           _ => cycles += self.cpu.execute_next_instruction() as u32
         }
+
+        if let Some((out_port, value)) = self.cpu.get_output() {
+          self.space_invaders_out(out_port, value);
+          self.play_sounds();
+        }
+
         self.last_execution_time = Some(Instant::now());
       }
     } else {

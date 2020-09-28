@@ -52,6 +52,8 @@ pub struct Intel8080 {
   cc: ConditionCodes,
   pub interrupts: Interrupts,
   halted: bool,
+  has_output: bool,
+  output_port: u8,
 }
 
 impl Intel8080 {
@@ -76,6 +78,8 @@ impl Intel8080 {
       },
       interrupts: Interrupts::Disabled,
       halted: false,
+      has_output: false,
+      output_port: 0,
     }
   }
 
@@ -261,6 +265,16 @@ impl Intel8080 {
     }
   }
 
+  pub fn get_output(&mut self) -> Option<(u8, u8)> {
+    match self.has_output {
+      true => {
+        self.has_output = false; //TODO: This line is only necessary as long as IN is being handled externally
+        Some((self.output_port, self.a))
+      }
+      false => None,
+    }
+  }
+
   pub fn execute_next_instruction(&mut self) -> u8 {
     if self.halted {
       return 0;
@@ -271,6 +285,7 @@ impl Intel8080 {
       Interrupts::PreEnabled => Interrupts::Enabled,
       other => other,
     };
+    self.has_output = false;
 
     #[cfg(feature = "printops")]
     self.disassemble_8080_op(self.pc as usize);
@@ -1212,8 +1227,8 @@ impl Intel8080 {
         10
       }
       0xd3 => { // OUT D8
-        //TODO: Figure out if there is a way to implement OUT here. API?
-        println!("**Incomplete opcode 0xD3**");
+        self.output_port = opcode[1];
+        self.has_output = true;
         self.pc += 1;
         10
       }
