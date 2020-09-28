@@ -195,6 +195,7 @@ impl Machine {
         self.ufo_sink.pause();
       }
       if self.out_port3 & 0x2 == 0x2 && !(self.last_out_port3 & 0x2 == 0x2) {
+        //TODO: In the actual arcade, shoot is a continuous sound that lasts until the laser hits something
         let sound = rodio::Decoder::new(Cursor::new(SHOOT)).unwrap();
         rodio::play_raw(&self.sound_device, sound.convert_samples());
       }
