@@ -159,11 +159,6 @@ impl Machine {
       let cycles_needed = (time.elapsed().as_secs_f64() / CYCLE_TIME.as_secs_f64()).ceil() as u32;
       let mut cycles = 0;
       while cycles < cycles_needed {
-        #[cfg(feature = "cputest")]
-        if self.cpu.pc == 0x05 {
-          self.cpu.special_print();
-        }
-
         cycles += self.cpu.execute_next_instruction() as u32;
 
         if let Some((out_port, value)) = self.cpu.get_output() {

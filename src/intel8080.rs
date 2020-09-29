@@ -46,7 +46,7 @@ pub struct Intel8080 {
   h: u8,
   l: u8,
   sp: u16,
-  pub pc: u16,
+  pc: u16,
   pub memory: [u8; 0x10000],
   cc: ConditionCodes,
   interrupts: Interrupts,
@@ -247,7 +247,7 @@ impl Intel8080 {
   }
 
   #[cfg(feature = "cputest")]
-  pub fn special_print(&mut self) {
+  fn special_print(&mut self) {
     match self.c {
       9 => {
         // Message starts with ASCII sequence 0x0C 0x0D 0x0A (NPFF, CR, LF)
@@ -284,6 +284,11 @@ impl Intel8080 {
   pub fn execute_next_instruction(&mut self) -> u8 {
     if self.halted {
       return 0;
+    }
+
+    #[cfg(feature = "cputest")]
+    if self.pc == 0x05 {
+      self.special_print();
     }
 
     // If interrupts were set to be enabled last time, fully enable them this time around so they will be available after this instruction executes
