@@ -273,10 +273,7 @@ impl Intel8080 {
 
   pub fn get_output(&mut self) -> Option<(u8, u8)> {
     match self.has_output {
-      true => {
-        self.has_output = false; //TODO: This line is only necessary as long as IN is being handled externally
-        Some((self.output_port, self.a))
-      }
+      true => Some((self.output_port, self.a)),
       false => None,
     }
   }
