@@ -54,6 +54,7 @@ pub struct Intel8080 {
   halted: bool,
   has_output: bool,
   output_port: u8,
+  pub input_ports: [u8; 256],
 }
 
 impl Intel8080 {
@@ -80,6 +81,7 @@ impl Intel8080 {
       halted: false,
       has_output: false,
       output_port: 0,
+      input_ports: [0; 256],
     }
   }
 
