@@ -120,19 +120,6 @@ impl Machine {
     &self.cpu.memory[0x2400..0x4000]
   }
 
-  fn space_invaders_in(&self, port: u8) -> u8 {
-    match port {
-      0 => 0b1110,
-      1 => self.in_port1 | 0b1000,
-      2 => self.in_port2 | 0b1011, // "Easy mode" -- start with 6 lives, gain a new life every 1000 points
-      3 => {
-        let v = (self.shift1 as u16) << 8 | self.shift0 as u16;
-        ((v >> (8 - self.shift_offset)) & 0x00FF) as u8
-      }
-      _ => 0x00,
-    }
-  }
-
   fn space_invaders_out(&mut self, port: u8, value: u8) {
     match port {
       2 => {
