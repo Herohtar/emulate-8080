@@ -146,6 +146,13 @@ impl Machine {
     }
   }
 
+  fn update_shift_register(&mut self) {
+    self.cpu.input_ports[3] = {
+      let v = (self.shift1 as u16) << 8 | self.shift0 as u16;
+      ((v >> (8 - self.shift_offset)) & 0x00FF) as u8
+    };
+  }
+
   pub fn execute(&mut self) {
     #[cfg(not(feature = "cputest"))]
     match self.last_interrupt_time {
