@@ -1278,8 +1278,7 @@ impl Intel8080 {
         10
       }
       0xdb => { // IN D8
-        //TODO: Figure out if there is a way to implement IN here. API?
-        println!("**Incomplete opcode 0xDB**");
+        self.a = self.input_ports[opcode[1] as usize];
         self.pc += 1;
         10
       }
