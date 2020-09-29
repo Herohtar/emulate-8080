@@ -181,15 +181,7 @@ impl Machine {
           self.cpu.special_print();
         }
 
-        let opcode = self.cpu.memory[self.cpu.pc as usize];
-        match opcode {
-          0xdb => { // IN D8
-            self.cpu.a = self.space_invaders_in(self.cpu.memory[self.cpu.pc as usize + 1]);
-            self.cpu.pc += 2;
-            cycles += 10;
-          }
-          _ => cycles += self.cpu.execute_next_instruction() as u32
-        }
+        cycles += self.cpu.execute_next_instruction() as u32;
 
         if let Some((out_port, value)) = self.cpu.get_output() {
           self.space_invaders_out(out_port, value);
