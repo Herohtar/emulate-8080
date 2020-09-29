@@ -57,7 +57,13 @@ impl Machine {
     sink.append(sound.repeat_infinite());
 
     Machine {
-      cpu: Intel8080::new(),
+      cpu: {
+        let mut cpu = Intel8080::new();
+        cpu.input_ports[0] = 0b1110;
+        cpu.input_ports[1] = 0b1000;
+        cpu.input_ports[2] = 0b1011; // "Easy mode" -- start with 6 lives, gain a new life every 1000 points
+        cpu
+      },
       rom_size: 0,
       last_interrupt_time: None,
       next_interrupt: 1,
