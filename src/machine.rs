@@ -4,7 +4,7 @@ use rodio::{Device, Sink, Source};
 use crate::intel8080::Intel8080;
 
 const CYCLE_TIME: Duration = Duration::from_nanos(480);
-const INTERRUPT_INTERVAL: Duration = Duration::from_micros(8333);
+const INTERRUPT_INTERVAL: Duration = Duration::from_micros(8000);
 
 const SHOOT: &[u8] = include_bytes!("../sounds/shoot.wav");
 const BEAT1: &[u8] = include_bytes!("../sounds/fastinvader1.wav");
