@@ -62,6 +62,12 @@ fn main() -> std::io::Result<()> {
       window.draw_2d(&event, |context, graphics, _device| {
         clear([0.0; 4], graphics);
 
+        // If the background is shown, attempt to make the graphics look more like the arcade projection
+        let alpha = match show_background {
+          true => 0x90,
+          false => 0xFF,
+        };
+
         let screen_buffer = emulator.frame_buffer();
         // In the actual Space Invaders machine, the screen is drawn sideways and the monitor is physically rotated 90 CCW
         // This means the data in memory starts with the bottom left corner
@@ -78,10 +84,10 @@ fn main() -> std::io::Result<()> {
                 _ => Rgba([0x00, 0x00, 0x00, 0x00]),
               }
               _ => match y {
-                32..=63 => Rgba([0xFF, 0x00, 0x00, 0xFF]),
-                184..=239 => Rgba([0x00, 0xFF, 0x00, 0xFF]),
-                240..=255 if x > 23 && x < 136 => Rgba([0x00, 0xFF, 0x00, 0xFF]),
-                _ => Rgba([0xFF, 0xFF, 0xFF, 0xFF]),
+                32..=63 => Rgba([0xFF, 0x00, 0x00, alpha]),
+                184..=239 => Rgba([0x00, 0xFF, 0x00, alpha]),
+                240..=255 if x > 23 && x < 136 => Rgba([0x00, 0xFF, 0x00, alpha]),
+                _ => Rgba([0xFF, 0xFF, 0xFF, alpha]),
               }
             });
           }
