@@ -38,8 +38,7 @@ enum Interrupts {
 }
 
 pub struct Intel8080 {
-  //TODO: See if there is a way to expose these without making them public
-  pub a: u8,
+  a: u8,
   b: u8,
   c: u8,
   d: u8,
