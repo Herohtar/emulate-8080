@@ -135,11 +135,15 @@ impl Machine {
 
   fn space_invaders_out(&mut self, port: u8, value: u8) {
     match port {
-      2 => self.shift_offset = value & 0x07,
+      2 => {
+        self.shift_offset = value & 0x07;
+        self.update_shift_register();
+      }
       3 => self.out_port3 = value,
       4 => {
         self.shift0 = self.shift1;
         self.shift1 = value;
+        self.update_shift_register();
       }
       5 => self.out_port5 = value,
       _ => (),
