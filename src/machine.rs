@@ -242,31 +242,31 @@ impl Machine {
 
   pub fn key_down(&mut self, key: PlayerKey) {
     match key {
-        PlayerKey::Coin => self.in_port1 |= 0x01,
-        PlayerKey::Tilt => self.in_port2 |= 0x04,
-        PlayerKey::P1Left => self.in_port1 |= 0x20,
-        PlayerKey::P1Right => self.in_port1 |= 0x40,
-        PlayerKey::P1Fire => self.in_port1 |= 0x10,
-        PlayerKey::P1Start => self.in_port1 |= 0x04,
-        PlayerKey::P2Left => self.in_port2 |= 0x20,
-        PlayerKey::P2Right => self.in_port2 |= 0x40,
-        PlayerKey::P2Fire => self.in_port2 |= 0x10,
-        PlayerKey::P2Start => self.in_port1 |= 0x02,
+        PlayerKey::Coin => self.cpu.input_ports[1] |= 0x01,
+        PlayerKey::Tilt => self.cpu.input_ports[2] |= 0x04,
+        PlayerKey::P1Left => self.cpu.input_ports[1] |= 0x20,
+        PlayerKey::P1Right => self.cpu.input_ports[1] |= 0x40,
+        PlayerKey::P1Fire => self.cpu.input_ports[1] |= 0x10,
+        PlayerKey::P1Start => self.cpu.input_ports[1] |= 0x04,
+        PlayerKey::P2Left => self.cpu.input_ports[2] |= 0x20,
+        PlayerKey::P2Right => self.cpu.input_ports[2] |= 0x40,
+        PlayerKey::P2Fire => self.cpu.input_ports[2] |= 0x10,
+        PlayerKey::P2Start => self.cpu.input_ports[1] |= 0x02,
     }
   }
 
   pub fn key_up(&mut self, key: PlayerKey) {
     match key {
-        PlayerKey::Coin => self.in_port1 &= !0x01,
-        PlayerKey::Tilt => self.in_port2 &= !0x04,
-        PlayerKey::P1Left => self.in_port1 &= !0x20,
-        PlayerKey::P1Right => self.in_port1 &= !0x40,
-        PlayerKey::P1Fire => self.in_port1 &= !0x10,
-        PlayerKey::P1Start => self.in_port1 &= !0x04,
-        PlayerKey::P2Left => self.in_port2 &= !0x20,
-        PlayerKey::P2Right => self.in_port2 &= !0x40,
-        PlayerKey::P2Fire => self.in_port2 &= !0x10,
-        PlayerKey::P2Start => self.in_port1 &= !0x02,
+        PlayerKey::Coin => self.cpu.input_ports[1] &= !0x01,
+        PlayerKey::Tilt => self.cpu.input_ports[2] &= !0x04,
+        PlayerKey::P1Left => self.cpu.input_ports[1] &= !0x20,
+        PlayerKey::P1Right => self.cpu.input_ports[1] &= !0x40,
+        PlayerKey::P1Fire => self.cpu.input_ports[1] &= !0x10,
+        PlayerKey::P1Start => self.cpu.input_ports[1] &= !0x04,
+        PlayerKey::P2Left => self.cpu.input_ports[2] &= !0x20,
+        PlayerKey::P2Right => self.cpu.input_ports[2] &= !0x40,
+        PlayerKey::P2Fire => self.cpu.input_ports[2] &= !0x10,
+        PlayerKey::P2Start => self.cpu.input_ports[1] &= !0x02,
     }
   }
 }
