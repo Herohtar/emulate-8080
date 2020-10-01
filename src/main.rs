@@ -8,7 +8,21 @@ use piston_window::*;
 
 const SCALE: f64 = 3.0;
 
+fn load_space_invaders(emulator: &mut Machine) {
+    //TODO: Load ROM from ZIP file
+    emulator.load_rom_bytes(include_bytes!("../roms/invaders.h"));
+    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.g"), 0x800);
+    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.f"), 0x1000);
+    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.e"), 0x1800);
+    //emulator.load_rom("roms/invaders.bin")?;
+    //emulator.load_rom("roms/invaders.h")?;
+    //emulator.load_rom_at("roms/invaders.g", 0x800)?;
+    //emulator.load_rom_at("roms/invaders.f", 0x1000)?;
+    //emulator.load_rom_at("roms/invaders.e", 0x1800)?;
+}
+
 fn main() -> std::io::Result<()> {
+  //TODO: Implement save state with Serde+Flexbuffers?
   let mut emulator = Machine::new();
 
   #[cfg(feature = "cputest")]
@@ -31,15 +45,7 @@ fn main() -> std::io::Result<()> {
         .build()
         .unwrap();
 
-    emulator.load_rom_bytes(include_bytes!("../roms/invaders.h"));
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.g"), 0x800);
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.f"), 0x1000);
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.e"), 0x1800);
-    //emulator.load_rom("roms/invaders.bin")?;
-    //emulator.load_rom("roms/invaders.h")?;
-    //emulator.load_rom_at("roms/invaders.g", 0x800)?;
-    //emulator.load_rom_at("roms/invaders.f", 0x1000)?;
-    //emulator.load_rom_at("roms/invaders.e", 0x1800)?;
+    load_space_invaders(&mut emulator);
 
     let mut screen = RgbaImage::new(224, 256);
     let mut texture_context = window.create_texture_context();
