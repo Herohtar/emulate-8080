@@ -1,4 +1,4 @@
-use std::{fs::File, io::Cursor, io::Read, time::Duration, time::Instant};
+use std::{io::Cursor, io::Read, time::Duration, time::Instant};
 use rodio::{Device, Sink, Source};
 
 use crate::intel8080::Intel8080;
@@ -89,16 +89,15 @@ impl Machine {
   }
 
   #[allow(dead_code)]
-  pub fn load_rom(&mut self, path: &str) -> std::io::Result<()> {
-    self.load_rom_at(path, 0)?;
+  pub fn load_rom(&mut self, reader: &mut impl Read) -> std::io::Result<()> {
+    self.load_rom_at(reader, 0)?;
 
     Ok(())
   }
 
-  pub fn load_rom_at(&mut self, path: &str, offset: u16) -> std::io::Result<()> {
-    let mut file = File::open(path)?;
+  pub fn load_rom_at(&mut self, reader: &mut impl Read, offset: u16) -> std::io::Result<()> {
     //TODO: This is not correct if the ROM is loaded in parts
-    self.rom_size = file.read(&mut self.cpu.memory[offset as usize..])? as u16;
+    self.rom_size = reader.read(&mut self.cpu.memory[offset as usize..])? as u16;
 
     Ok(())
   }
