@@ -78,6 +78,7 @@ impl Machine {
     }
   }
 
+  #[allow(dead_code)]
   pub fn load_rom_bytes(&mut self, bytes: &[u8]) {
     self.load_rom_bytes_at(bytes, 0);
   }
