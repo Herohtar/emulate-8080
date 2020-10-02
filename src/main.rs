@@ -8,17 +8,14 @@ use piston_window::*;
 
 const SCALE: f64 = 3.0;
 
-fn load_space_invaders(emulator: &mut Machine) {
-    //TODO: Load ROM from ZIP file
-    emulator.load_rom_bytes(include_bytes!("../roms/invaders.h"));
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.g"), 0x800);
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.f"), 0x1000);
-    emulator.load_rom_bytes_at(include_bytes!("../roms/invaders.e"), 0x1800);
-    //emulator.load_rom("roms/invaders.bin")?;
-    //emulator.load_rom("roms/invaders.h")?;
-    //emulator.load_rom_at("roms/invaders.g", 0x800)?;
-    //emulator.load_rom_at("roms/invaders.f", 0x1000)?;
-    //emulator.load_rom_at("roms/invaders.e", 0x1800)?;
+fn load_space_invaders(emulator: &mut Machine) -> zip::result::ZipResult<()> {
+  let mut zip = zip::ZipArchive::new(std::io::Cursor::new(include_bytes!("../roms/invaders.zip").to_vec()))?;
+  emulator.load_rom(&mut zip.by_name("invaders.h")?)?;
+  emulator.load_rom_at(&mut zip.by_name("invaders.g")?, 0x800)?;
+  emulator.load_rom_at(&mut zip.by_name("invaders.f")?, 0x1000)?;
+  emulator.load_rom_at(&mut zip.by_name("invaders.e")?, 0x1800)?;
+
+  Ok(())
 }
 
 fn main() -> std::io::Result<()> {
@@ -45,7 +42,7 @@ fn main() -> std::io::Result<()> {
         .build()
         .unwrap();
 
-    load_space_invaders(&mut emulator);
+    load_space_invaders(&mut emulator).unwrap();
 
     let mut screen = RgbaImage::new(224, 256);
     let mut texture_context = window.create_texture_context();
