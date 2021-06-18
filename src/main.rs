@@ -51,7 +51,7 @@ fn main() -> std::io::Result<()> {
     let background = ::image::load_from_memory(include_bytes!("../images/background.jpg")).unwrap();
     let background = match background {
       ::image::DynamicImage::ImageRgba8(image) => image,
-      image => image.to_rgba(),
+      image => image.to_rgba8(),
     };
     let background = ::image::imageops::resize(&background, 224 * SCALE as u32, 256 * SCALE as u32, ::image::imageops::FilterType::Lanczos3);
     let background = Texture::from_image(
