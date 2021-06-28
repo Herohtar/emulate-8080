@@ -6,15 +6,15 @@ use crate::intel8080::Intel8080;
 const CYCLE_TIME: Duration = Duration::from_nanos(480);
 const INTERRUPT_INTERVAL: Duration = Duration::from_micros(8000);
 
-const SHOOT: &[u8] = include_bytes!("../sounds/shoot.wav");
-const BEAT1: &[u8] = include_bytes!("../sounds/fastinvader1.wav");
-const BEAT2: &[u8] = include_bytes!("../sounds/fastinvader2.wav");
-const BEAT3: &[u8] = include_bytes!("../sounds/fastinvader3.wav");
-const BEAT4: &[u8] = include_bytes!("../sounds/fastinvader4.wav");
-const EXPLOSION: &[u8] = include_bytes!("../sounds/explosion.wav");
-const INVADER_KILLED: &[u8] = include_bytes!("../sounds/invaderkilled.wav");
-const UFO_HIGH_PITCH: &[u8] = include_bytes!("../sounds/ufo_highpitch.wav");
-const UFO_LOW_PITCH: &[u8] = include_bytes!("../sounds/ufo_lowpitch.wav");
+const SHOOT: &[u8] = include_bytes!("../sounds/shoot.flac");
+const BEAT1: &[u8] = include_bytes!("../sounds/fastinvader1.flac");
+const BEAT2: &[u8] = include_bytes!("../sounds/fastinvader2.flac");
+const BEAT3: &[u8] = include_bytes!("../sounds/fastinvader3.flac");
+const BEAT4: &[u8] = include_bytes!("../sounds/fastinvader4.flac");
+const EXPLOSION: &[u8] = include_bytes!("../sounds/explosion.flac");
+const INVADER_KILLED: &[u8] = include_bytes!("../sounds/invaderkilled.flac");
+const UFO_HIGH_PITCH: &[u8] = include_bytes!("../sounds/ufo_highpitch.flac");
+const UFO_LOW_PITCH: &[u8] = include_bytes!("../sounds/ufo_lowpitch.flac");
 
 pub enum PlayerKey {
   Coin,
