@@ -64,7 +64,7 @@ fn main() -> std::io::Result<()> {
 
     while let Some(event) = window.next() {
       window.draw_2d(&event, |context, graphics, device| {
-        clear([0.0; 4], graphics);
+        clear([0.0, 0.0, 0.0, 1.0], graphics);
 
         // If the background is shown, attempt to make the graphics look more like the arcade projection
         let alpha = match show_background {
