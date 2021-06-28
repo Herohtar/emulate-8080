@@ -1,5 +1,5 @@
 use std::{io::Cursor, io::Read, time::Duration, time::Instant};
-use rodio::{Device, Sink, Source};
+use rodio::{OutputStream, OutputStreamHandle, Sink, Source};
 
 use crate::intel8080::Intel8080;
 
@@ -42,14 +42,15 @@ pub struct Machine {
   shift0: u8,
   shift1: u8,
   shift_offset: u8,
-  sound_device: Device,
+  _stream: OutputStream,
+  stream_handle: OutputStreamHandle,
   ufo_sink: Sink,
 }
 
 impl Machine {
   pub fn new() -> Self {
-    let device = rodio::default_output_device().unwrap();
-    let sink = Sink::new(&device);
+    let (stream, stream_handle) = OutputStream::try_default().unwrap();
+    let sink = Sink::try_new(&stream_handle).unwrap();
     sink.pause();
     let sound = rodio::Decoder::new(Cursor::new(UFO_HIGH_PITCH)).unwrap();
     sink.append(sound.repeat_infinite());
@@ -73,7 +74,8 @@ impl Machine {
       shift0: 0,
       shift1: 0,
       shift_offset: 0,
-      sound_device: device,
+      _stream: stream,
+      stream_handle,
       ufo_sink: sink,
     }
   }
@@ -184,37 +186,37 @@ impl Machine {
       if self.out_port3 & 0x2 == 0x2 && !(self.last_out_port3 & 0x2 == 0x2) {
         //TODO: In the actual arcade, shoot is a continuous sound that lasts until the laser hits something
         let sound = rodio::Decoder::new(Cursor::new(SHOOT)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port3 & 0x4 == 0x4 && !(self.last_out_port3 & 0x4 == 0x4) {
         let sound = rodio::Decoder::new(Cursor::new(EXPLOSION)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port3 & 0x8 == 0x8 && !(self.last_out_port3 & 0x8 == 0x8) {
         let sound = rodio::Decoder::new(Cursor::new(INVADER_KILLED)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
     }
     if self.out_port5 != self.last_out_port5 {
       if self.out_port5 & 0x1 == 0x1 && !(self.last_out_port5 & 0x1 == 0x1) {
         let sound = rodio::Decoder::new(Cursor::new(BEAT1)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port5 & 0x2 == 0x2 && !(self.last_out_port5 & 0x2 == 0x2) {
         let sound = rodio::Decoder::new(Cursor::new(BEAT2)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port5 & 0x4 == 0x4 && !(self.last_out_port5 & 0x4 == 0x4) {
         let sound = rodio::Decoder::new(Cursor::new(BEAT3)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port5 & 0x8 == 0x8 && !(self.last_out_port5 & 0x8 == 0x8) {
         let sound = rodio::Decoder::new(Cursor::new(BEAT4)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
       if self.out_port5 & 0x10 == 0x10 && !(self.last_out_port5 & 0x10 == 0x10) {
         let sound = rodio::Decoder::new(Cursor::new(UFO_LOW_PITCH)).unwrap();
-        rodio::play_raw(&self.sound_device, sound.convert_samples());
+        self.stream_handle.play_raw(sound.convert_samples()).unwrap();
       }
     }
     self.last_out_port3 = self.out_port3;
