@@ -47,6 +47,7 @@ fn main() -> std::io::Result<()> {
     let mut screen = RgbaImage::new(224, 256);
     let mut texture_context = window.create_texture_context();
     let texture_settings = TextureSettings::new();
+    let mut screen_texture = Texture::from_image(&mut texture_context, &screen, &texture_settings).unwrap();
 
     let background = ::image::load_from_memory(include_bytes!("../images/background.jpg")).unwrap();
     let background = match background {
@@ -62,7 +63,7 @@ fn main() -> std::io::Result<()> {
     let mut show_background = false;
 
     while let Some(event) = window.next() {
-      window.draw_2d(&event, |context, graphics, _device| {
+      window.draw_2d(&event, |context, graphics, device| {
         clear([0.0; 4], graphics);
 
         // If the background is shown, attempt to make the graphics look more like the arcade projection
@@ -96,11 +97,8 @@ fn main() -> std::io::Result<()> {
           }
         }
 
-        let screen = Texture::from_image(
-          &mut texture_context,
-          &screen,
-          &texture_settings,
-        ).unwrap();
+        screen_texture.update(&mut texture_context, &screen).unwrap();
+        texture_context.encoder.flush(device);
 
         if show_background {
           image(
@@ -111,7 +109,7 @@ fn main() -> std::io::Result<()> {
         }
 
         image(
-          &screen,
+          &screen_texture,
           context.transform.scale(SCALE, SCALE),
           graphics,
         );
