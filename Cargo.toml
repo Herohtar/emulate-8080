@@ -13,5 +13,5 @@ cputest = []
 [dependencies]
 piston_window = "^0.120.0"
 image = "^0.23.14"
-rodio = "^0.14.0"
+rodio = { version = "^0.14.0", default-features = false, features = ["flac"] }
 zip = "^0.5.13"
